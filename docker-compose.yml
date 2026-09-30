@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: trainhub
+      POSTGRES_USER: trainhub
+      POSTGRES_PASSWORD: trainhub
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    environment:
+      DJANGO_SECRET_KEY: change-this-in-development
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "*"
+      DATABASE_URL: postgresql://trainhub:trainhub@db:5432/trainhub
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
